@@ -8,13 +8,24 @@
 import UIKit
 
 class ProductCell: UICollectionViewCell {
-    @IBOutlet var idLabel: UILabel!
-    @IBOutlet var nameLabel: UILabel!
-    @IBOutlet var salaryLabel: UILabel!
-    @IBOutlet var ageLabel: UILabel!
-
+    @IBOutlet var imageIV: UIImageView!
+    @IBOutlet var descLabel: UILabel!
+    @IBOutlet var priceLabel: UILabel!
+    @IBOutlet weak var imageHeight: NSLayoutConstraint!
+    @IBOutlet weak var imageWidth: NSLayoutConstraint!
+    
     class var identifier: String { return String(describing: self) }
     class var nib: UINib { return UINib(nibName: identifier, bundle: nil) }
+    
+    var cellViewModel: ProductCellViewModel? {
+        didSet {
+            imageIV.loadImageUsingCache(withUrl: cellViewModel?.image ?? "")
+            imageHeight.constant = cellViewModel?.imageHeight ?? 0
+            imageWidth.constant = cellViewModel?.imageWidth ?? 0
+            descLabel.text = cellViewModel?.desc
+            priceLabel.text = cellViewModel?.price
+        }
+    }
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,15 +38,13 @@ class ProductCell: UICollectionViewCell {
         
         // Line separator full width
         preservesSuperviewLayoutMargins = false
-        separatorInset = UIEdgeInsets.zero
         layoutMargins = UIEdgeInsets.zero
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        idLabel.text = nil
-        nameLabel.text = nil
-        salaryLabel.text = nil
-        ageLabel.text = nil
+        imageIV.image = nil
+        descLabel.text = nil
+        priceLabel.text = nil
     }
 }

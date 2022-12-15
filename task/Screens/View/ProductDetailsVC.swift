@@ -9,21 +9,15 @@ import UIKit
 
 class ProductDetailsVC: UIViewController {
 
+    @IBOutlet weak var productdesc: UILabel!
+    @IBOutlet weak var productImage: UIImageView!
+    
+    var productI = ""
+    var productD = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        productImage.loadImageUsingCache(withUrl: productI)
+        productdesc.text = productD
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
