@@ -19,6 +19,7 @@ class ProductsViewModel: NSObject {
     func getProducts() {
         productService.getProducts { success, model, error in
             if success, let products = model {
+                self.deleteAllData("Productsl")
                 self.fetchData(products: products)
             } else {
                 print(error!)
@@ -65,7 +66,6 @@ class ProductsViewModel: NSObject {
     
     func fetchData(products: Products) {
         self.products = products // Cache
-        deleteAllData("ProductsL")
         var vms = [ProductCellViewModel]()
         for product in products {
             let productsCache = ProductsL(context: self.context)

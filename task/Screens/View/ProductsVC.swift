@@ -8,6 +8,12 @@
 import UIKit
 import Network
 
+enum LoadMoreStatus {
+    case loading
+    case finished
+    case haveMore
+}
+
 class ProductsVC: UIViewController {
     @IBOutlet var collectionView: UICollectionView!
     
@@ -56,9 +62,9 @@ class ProductsVC: UIViewController {
 extension ProductsVC: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if noConnection == true {
-            return viewModel.productsL?.count ?? 0
+            return viewModel.productsL?.count ?? 0 > 20 ? 20 : viewModel.productsL?.count ?? 0
         } else {
-            return viewModel.productCellViewModels.count
+            return viewModel.productCellViewModels.count > 20 ? 20 : viewModel.productCellViewModels.count
         }
     }
     
@@ -94,7 +100,24 @@ extension ProductsVC: UICollectionViewDataSource {
 }
 
 extension ProductsVC: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        print("hiiiii\(indexPath.row)")
+        if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
+            DispatchQueue.main.async {
+                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
+            }
+            updateNextSet()
+        }
+    }
     
+    func updateNextSet(){
+        print("On Completetion")
+        if noConnection == true {
+            viewModel.fetchCacheData()
+        } else {
+            viewModel.getProducts()
+        }
+    }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
