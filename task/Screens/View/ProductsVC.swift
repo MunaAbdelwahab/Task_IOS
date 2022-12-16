@@ -87,21 +87,24 @@ extension ProductsVC: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let VC = storyboard?.instantiateViewController(withIdentifier: "ProductDetailsVC") as! ProductDetailsVC
-        if noConnection == true {
-            VC.productI = viewModel.productsL?[indexPath.row].image ?? ""
-            VC.productD = viewModel.productsL?[indexPath.row].desc ?? ""
-        } else {
-            VC.productI = viewModel.products[indexPath.row].image.url
-            VC.productD = viewModel.products[indexPath.row].productDescription
-        }
-        navigationController?.pushViewController(VC, animated: true)
+        let VC = self.storyboard?.instantiateViewController(withIdentifier: "ProductDetailsVC") as! ProductDetailsVC
+        UIView.animate(withDuration: 0.75, animations: {() -> Void in
+            UIView.setAnimationCurve(.easeInOut)
+            if self.noConnection == true {
+                VC.productI = self.viewModel.productsL?[indexPath.row].image ?? ""
+                VC.productD = self.viewModel.productsL?[indexPath.row].desc ?? ""
+            } else {
+                VC.productI = self.viewModel.products[indexPath.row].image.url
+                VC.productD = self.viewModel.products[indexPath.row].productDescription
+            }
+            self.navigationController?.pushViewController(VC, animated: true)
+            UIView.setAnimationTransition(.flipFromRight, for: (self.navigationController?.view)!, cache: false)
+        })
     }
 }
 
 extension ProductsVC: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print("hiiiii\(indexPath.row)")
         if indexPath.row == collectionView.numberOfItems(inSection: indexPath.section) - 1 {
             DispatchQueue.main.async {
                 collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: true)
